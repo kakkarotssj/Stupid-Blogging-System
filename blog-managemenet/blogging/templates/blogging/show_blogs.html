@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	{% if blogs %}
+		
+		{% for blog in blogs %}
+			<h3>Title</h3> 
+			{{ blog.title }}
+			<h3>Content</h3> 
+			{{ blog.content }}
+			{% if same_user %}
+				<br>
+				{% with blog.id|stringformat:"s" as blog_id %}
+					<a href={{ "/profile/"|add:request.user.username|add:"/blogs/delete/"|add:blog_id }}>Delete Blog</a>
+				{% endwith %}
+			{% endif %}
+			<br><br><br>
+		{% endfor %}
+
+	{% else %}
+		{% if same_user %}
+			<h2> You haven't written any blogs yet.</h2>
+			<h2>
+				<a href={{ "/profile/"|add:request.user.username }}> Write a BLOG !!! </a>
+			</h2>
+		{% else %}
+			<h2> User haven't written any blogs yet.</h2>
+		{% endif %}
+	{% endif %}
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	{{ user.username }}
+	{{ whose_profile }}
+	
+	{% if my_profile %}
+		<a href="/logout">Logout</a>
+		<a href="/delete">Delete Account</a>
+
+		<h2>People you are following:
+			
+			<ul>
+				{% for people in followed_people %}
+				    <li><a href={{ base_url|add:people.user.username }}>{{ people }}</a></li>
+				{% endfor %}
+			</ul>
+
+		</h2>
+
+	<br><br>
+	{% if editing %}
+	<ul>
+		{% for key, value in editing.items %}
+		 	<li><a href={{ base_url|add:user.username|add:"/editing/"|add:value }}>{{ value }} </a></li>
+		{% endfor %}
+	</ul>
+	{% endif %}
+
+	<br><br>
+
+	<h2>
+		<a href={{ base_url|add:user.username|add:"/blogs" }}> 
+			Show my BLOGS !!! 
+		</a>
+	</h2>
+
+	<br><br>
+
+	<h2>Write a BLOG !!!</h2>
+	<form action="" method="get">
+		{% csrf_token %}
+		{{ blog_form.as_p }}
+		<input type="submit" value="Submit">
+	</form>
+
+	{% else %}
+		{% if not is_followed %}
+			<a href={{ follow_link }}>Follow</a>
+		{% else %}
+			<h3>Followed !!!</h3>
+			<a href={{ unfollow_link }}>Unfollow</a>
+		{% endif %}
+
+		<br><br>
+
+		{% if blogs %}
+		
+			{% for blog in blogs %}
+				<h3>Title</h3> 
+				{{ blog.title }}
+				<h3>Content</h3> 
+				{{ blog.content }}
+				{% if same_user %}
+					<br>
+					{% with blog.id|stringformat:"s" as blog_id %}
+						<a href={{ "/profile/"|add:request.user.username|add:"/blogs/delete/"|add:blog_id }}>Delete Blog</a>
+					{% endwith %}
+				{% endif %}
+				<br><br><br>
+			{% endfor %}
+
+		{% endif %}
+
+
+	{% endif %}
+
+
+</body>
+</html>
